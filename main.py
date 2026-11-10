@@ -5,7 +5,7 @@ from tableaux.katakana import katakana
 from tableaux.kanji_N5 import kanji
 
 def parcourirTableau(tableau):
-    kana_choisi = random.choice(list(tableau.keys()))
+    kana_choisi = random.choice(list(tableau))
 
     return kana_choisi
 
@@ -19,7 +19,8 @@ def poserQuestion(score, kana_choisi, tableau):
         # Demander le romaji
         
         print(f"Quel le romaji de {kana_choisi} ? ")
-          
+
+        # il peut y avoir la réponse dans les indices, il faut corriger
         indices = random.sample(list(tableau.values()), nb_indices - 1)
         indices.append(tableau[kana_choisi])
         bonne_reponse = tableau[kana_choisi]
@@ -48,41 +49,49 @@ def poserQuestion(score, kana_choisi, tableau):
 
     return score
 
-# Mettre ** permet de copier des dictionnaires et de les fusionner entre eux
 kana = {**hiragana, **katakana}
-
-# print(hiragana, katakana, kana)
-
-# pays_restants = pays.copy()
 
 tableau = {}
 
-print("Que voulez-vous travailler aujourd'hui ?")
-print("A : Hiragana")
-print("B : Katakana")
-print("c : Kana (les deux à la fois)")
-reponse = input("Votre réponse : ")
+reponse = ""
 
-if reponse.strip().lower() == "a":
-    reponse = "hiragana"
-    tableau = hiragana
+while reponse not in ["a", "b", "c", "d"]:
+    print("Que voulez-vous travailler aujourd'hui ?")
+    print("A : Hiragana")
+    print("B : Katakana")
+    print("c : Kana (les deux à la fois)")
+    reponse = input("Votre réponse : ")
 
-elif reponse.strip().lower() == "b":
-    reponse = "katakana"
-    tableau = katakana
+    if reponse.strip().lower() == "a":
+        tableau = hiragana
 
-elif reponse.strip().lower() == "c":
-    tableau = kana
+    elif reponse.strip().lower() == "b":
+        tableau = katakana
 
-elif reponse.strip().lower() == "d":
-    tableau = kanji
+    elif reponse.strip().lower() == "c":
+        tableau = kana
 
-else:
-    reponse = input("Veuillez marquer une nouvelle réponse")
+    elif reponse.strip().lower() == "d":
+        tableau = kanji
+
+    else:
+        reponse = input("Veuillez marquer une nouvelle réponse")
 
 print()
 print("Combien de questions voulez-vous faire ? ")
+
 nb_questions = int(input("Votre réponse : "))
+
+while True:
+    try:
+        nb_questions = int(input("Votre réponse : "))
+        if nb_questions > 0:
+            break
+        else:
+            print("Veuillez saisir un nombre supérieur à 0.")
+
+    except ValueError:
+        print("Veuillez saisir un nombre entier valide.")
 
 if nb_questions > len(tableau):
     nb_questions = len(tableau)
